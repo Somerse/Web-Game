@@ -218,7 +218,6 @@ function TerrainLayer(_z)
 function terrainGen(_x, _z)
 {
 	var coarse = Math.round(noise.simplex2((_x * _z) / 10000, _z / 3) * (1000 / _z));
-	var fine = Math.round(noise.simplex2((_x * _z) / 1000, _z / 3) * (10 / _z));
 	
-	return Math.round(coarse + fine);
+	return Math.round(coarse);
 }
