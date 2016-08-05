@@ -1,0 +1,70 @@
+var fps = 30;
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+var area = new Area('#ffffff', 40);
+
+setInterval(function() {
+   update();
+   draw();
+}, 1000 / fps);
+
+function update() {
+
+}
+
+function draw() {
+   canvas.width = window.innerWidth;
+   canvas.height = window.innerHeight;
+   
+   area.draw('#000000');
+}
+
+function Area(foreColor, depth) {
+   this.foreColor = foreColor;
+   var layers = []; 
+
+   for (var i = 0; Math.pow(i * 2, 2) < depth; i++) {
+      layers.push(new Layer(Math.pow(i * 2, 2)));
+   }
+   
+   this.draw = function(backColor)
+   {
+      context.fillStyle = backColor;
+      context.rect(0, 0, canvas.width, canvas.height)
+      context.fill();
+      
+      var colors = chroma.scale([this.foreColor, backColor]).colors(depth);
+      
+	   for (var i = 0; i < layers.length; i++)
+      {
+         var adjustedIndex = layers.length - 1 - i;
+         layers[adjustedIndex].draw(colors[Math.pow(adjustedIndex * 2, 2)]);
+      }
+   }
+}
+
+function Layer(z) {
+   var z = z;
+   var heights = [];
+   var increment = canvas.width / (10 * (z + 1));
+
+   for (var i = 0; i * increment < canvas.width; i++) {
+      //self.heights.push(Perlin(x / 100, z / 100));
+   }
+   
+   this.draw = function(color)
+   {
+      var height = canvas.height - 50 - 10 * z;
+      context.fillStyle = color;
+      context.beginPath();
+      context.moveTo(0, height);
+      //for (var i; i < this.heights.length; i++)
+      //{
+      //   context.lineTo(i * increment, this.heights[i]);
+      //}
+      context.lineTo(canvas.width, height);
+      context.lineTo(canvas.width, canvas.height);
+      context.lineTo(0, canvas.height);
+      context.fill();
+   }
+}
